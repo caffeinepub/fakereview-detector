@@ -1,0 +1,23 @@
+{
+  "overview": "A full-stack Fake Review Detection System that uses NLP and heuristic ML to classify product reviews as Real or Fake. Features include single review analysis, CSV bulk upload, a full history log, Recharts analytics, and an Internet Identity login system.",
+  "features": [
+    "Login with Internet Identity and test accounts",
+    "Submit a product review and get Real/Fake verdict with confidence score",
+    "Bulk analyze reviews by uploading a CSV file",
+    "View full review history with filtering, sorting, and delete",
+    "Analytics dashboard with Recharts pie and bar charts",
+    "Home, About, and Contact pages with responsive design",
+    "NLP heuristic classifier with TF-IDF scoring and suspicious word highlighting"
+  ],
+  "category": "productivity",
+  "tags": [
+    "nlp",
+    "machine-learning",
+    "review-detection",
+    "analytics",
+    "recharts",
+    "college-project",
+    "fake-reviews"
+  ],
+  "last_updated": "2026-04-08T15:55:21.154Z"
+}

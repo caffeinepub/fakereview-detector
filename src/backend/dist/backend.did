@@ -1,0 +1,102 @@
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type Timestamp = int;
+type ReviewResult = 
+ record {
+   confidence: nat;
+   id: ReviewId;
+   prediction: Prediction;
+   reviewText: text;
+   suspiciousWords: vec text;
+   timestamp: Timestamp;
+ };
+type ReviewPage = 
+ record {
+   items: vec ReviewResult;
+   page: nat;
+   pageSize: nat;
+   totalItems: nat;
+   totalPages: nat;
+ };
+type ReviewId = nat;
+type ReviewFilter = 
+ variant {
+   All;
+   Fake;
+   Real;
+ };
+type Prediction = 
+ variant {
+   Fake;
+   Real;
+ };
+type PaginationParams = 
+ record {
+   page: nat;
+   pageSize: nat;
+ };
+type DailyBreakdown = 
+ record {
+   date: text;
+   fakeCount: nat;
+   realCount: nat;
+ };
+type ContactInput = 
+ record {
+   email: text;
+   message: text;
+   name: text;
+ };
+type ClassificationResult = 
+ record {
+   confidence: nat;
+   prediction: Prediction;
+   reviewText: text;
+   suspiciousWords: vec text;
+ };
+type AnalyticsSummary = 
+ record {
+   dailyBreakdown: vec DailyBreakdown;
+   fakeCount: nat;
+   realCount: nat;
+   totalReviews: nat;
+ };
+/// Composition root for the Fake Review Detection System canister.
+/// 
+/// Wires together:
+///   - Authorization (Internet Identity via caffeineai-authorization)
+///   - User profiles
+///   - Review submission, history, analytics, and CSV bulk classification
+///   - Contact form storage
+/// 
+/// No business logic lives here — all implementation is in lib/ and mixins/.
+service : {
+  _initializeAccessControl: () -> ();
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  bulkClassify: (texts: vec text) -> (vec ClassificationResult);
+  deleteReview: (id: nat) -> (bool);
+  getAnalytics: () -> (AnalyticsSummary) query;
+  getCallerUserProfile: () -> (opt record {
+                                     name: text;
+                                     username: text;
+                                   }) query;
+  getCallerUserRole: () -> (UserRole) query;
+  getReviewHistory: (filter: ReviewFilter, pagination: PaginationParams) ->
+   (ReviewPage) query;
+  getUserProfile: (user: principal) ->
+   (opt record {
+          name: text;
+          username: text;
+        }) query;
+  isCallerAdmin: () -> (bool) query;
+  saveCallerUserProfile: (profile: record {
+                                     name: text;
+                                     username: text;
+                                   }) -> ();
+  submitContact: (input: ContactInput) -> (bool);
+  submitReview: (reviewText: text) -> (ReviewResult);
+}
